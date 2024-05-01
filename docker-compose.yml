@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  runlocalaiagents:
+    build: .
+    container_name: json_xml_crewai
+    volumes:
+      - .:/app
+    working_dir: /app
+    command: tail -f /dev/null #keep it running
+
+#to run a local model, e.g. llama3:8b, should run:
+#docker exec -it ollama ollama run llama3:8b
+
+  llmservice:
+    image: ollama/ollama
+    container_name: ollama_crewai
+    volumes:
+      - ollama:/root/.ollama
+    ports:
+      - 11434:11434
+volumes:
+  ollama:

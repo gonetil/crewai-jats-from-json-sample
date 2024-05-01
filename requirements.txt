@@ -1,0 +1,7 @@
+crewai
+crewai[tools]
+langchain_groq
+wget
+pandas
+textwrap
+configparser
