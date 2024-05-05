@@ -10,8 +10,9 @@ from llm_service import LLM_Service
 
 
 class MetadataCrew:
-  def __init__(self, doi):
-    self.doi = doi
+  def __init__(self, path_to_document):
+    self.document = path_to_document
+    self.doi = '10.7717/peerj.4375'
     llm_service = LLM_Service()
     self.llm = llm_service.get_llm() 
 
@@ -25,17 +26,27 @@ class MetadataCrew:
 
   def run(self):
     agents = ReferenceProcessorAgents(self.llm)
+    
+    
     tasks = MetadataProcessorTasks()
 
-    processor_agent = agents.reference_parser()
-    xml_generation_task = tasks.process_metadata(processor_agent, self.getMetadata()) # Agrega la metadata puto
+  #  processor_agent = agents.reference_parser()
+  #  xml_generation_task = tasks.process_metadata(processor_agent, self.getMetadata()) # Agrega la metadata puto
+
+    docx_analyzer_agent = agents.paper_analyzer()
+    docx_analyze_task = tasks.look_for_references_in_paper(docx_analyzer_agent, self.llm, self.document)
+
+    reference_generator_agent=agents.reference_generator()
+    generate_references_task=tasks.transform_apa_reference_into_jats(reference_generator_agent,docx_analyze_task)
 
     crew = Crew(
       agents=[
-        processor_agent,
+        docx_analyzer_agent,
+        reference_generator_agent
       ],
       tasks=[
-        xml_generation_task,
+        docx_analyze_task,
+        generate_references_task
       ],
       verbose=False
     )
@@ -44,17 +55,10 @@ class MetadataCrew:
     return result
 
 if __name__ == "__main__":
-  print("## This is a simple JSON to JATS XML generator")
+  print("## DOCX reference analyzer ")
   print('-------------------------------')
-  doi = input(
-    dedent("""
-      Please write the DOI of the paper in the format: prefix/sufix
-          Example: 10.24215/23143738e132
-      If you want to use the same DOI as the example, just press [ENTER]     
-    """))
-  if not doi:
-    doi = "10.24215/23143738e132"
-  
-  metadata_crew = MetadataCrew(doi)
+
+  document='./sample/sample2_cadm.docx'  
+  metadata_crew = MetadataCrew(document)
   result = metadata_crew.run()
   print(result)
