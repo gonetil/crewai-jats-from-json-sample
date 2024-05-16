@@ -3,5 +3,6 @@ crewai[tools]
 langchain_groq
 wget
 pandas
-textwrap
+textwrap3
 configparser
+anthropic
