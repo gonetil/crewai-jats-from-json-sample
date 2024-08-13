@@ -38,4 +38,11 @@ class MetadataProcessorTasks():
     )
     
     
-    
+  def transform_docx_into_jats(sef,agent,prev_task):
+    return Task(
+      description="""Process an entire docx file for a scientific paper, identifying metadata, sections, citations, figures and tables, 
+      and generate an XML JATS representation of the same document. The list of references have already been parsed into a ref-list section """,
+      agent=agent,
+      context=[prev_task],
+      expected_output="""An XML JATS output for the given paper"""
+    )  

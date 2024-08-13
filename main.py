@@ -39,14 +39,19 @@ class MetadataCrew:
     reference_generator_agent=agents.reference_generator()
     generate_references_task=tasks.transform_apa_reference_into_jats(reference_generator_agent,docx_analyze_task)
 
+    paper_transformer_agent= agents.paper_transformer()
+    transform_docx_into_jats_task= tasks.transform_docx_into_jats(paper_transformer_agent,generate_references_task)
+
     crew = Crew(
       agents=[
         docx_analyzer_agent,
-        reference_generator_agent
+        reference_generator_agent,
+        paper_transformer_agent
       ],
       tasks=[
         docx_analyze_task,
-        generate_references_task
+        generate_references_task,
+        transform_docx_into_jats_task
       ],
       verbose=False
     )
@@ -58,7 +63,7 @@ if __name__ == "__main__":
   print("## DOCX reference analyzer ")
   print('-------------------------------')
 
-  document='./sample/sample2_cadm.docx'  
+  document='./sample/sample_cadm.docx'  
   metadata_crew = MetadataCrew(document)
   result = metadata_crew.run()
   print(result)

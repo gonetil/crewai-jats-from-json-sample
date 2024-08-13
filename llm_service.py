@@ -1,6 +1,7 @@
 from configparser import ConfigParser
 from langchain_groq import ChatGroq
 from langchain_openai import ChatOpenAI
+#from antropic import Anthropic
 import os
 
 class LLM_Connector:
@@ -30,6 +31,16 @@ class LocalOpenAI(LLM_Connector):
          api_key= self.api_key
     )
 
+class PREBILLama(LLM_Connector):
+  def __init__(self,params):
+    super().__init__(params)
+    self.llm = ChatOpenAI(
+         model = self.model_name,
+         base_url = self.base_url,
+         api_key= self.api_key
+    )
+
+
 
 class Groq(LLM_Connector):
   def __init__(self,params):
@@ -40,6 +51,14 @@ class Groq(LLM_Connector):
                   model=self.model_name
               )
  
+class AnthropicClaude(LLM_Connector):
+  def __init__(self,params):
+    super().__init__(params)
+    self.llm = Anthropic(
+                  api_key=self.api_key,
+                  model=self.model_name
+                )
+    
 
 class LLM_Service:
   def __init__(self):

@@ -48,3 +48,14 @@ class ReferenceProcessorAgents():
       verbose=False,
       llm = self.llm
     )
+
+  def paper_transformer(self):
+    return Agent(
+       role='Transforms a paper from DOCX format into XML JATS format',
+       goal="""The goal is to generate an XML JATS version 1.2 document from a DOCX paper, in which all sections, citations, 
+        tables and figures are included and correctly referenced""",
+       backstory = """Your are a librarian working at a scientific publishing house, and your job is to transform scientific 
+        papers writen in docx files into XML JATS representations of the same papers""", 
+       verbose=False,
+       llm = self.llm
+    )
